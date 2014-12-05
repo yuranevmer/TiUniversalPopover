@@ -15,19 +15,25 @@ if (isIpad()) {
 };
 
 /*
- * simulate Popover
+ * Popover
  */
 function Popover(args,o){
     var self = this;
-    this.contentWindow = null;
-    this.contentView = null;
     args = args || {};
-    this._args = _.extend({
+    this._args = args;
+    this.contentView = null;
+    this.contentWindow = null; //root window for contentView
+    this._args = _.extend({    //default style
         width: "80%",
         height: "80%",
         borderRadius: 8,
         opacity: 0
     }, args);
+    if (this._args.contentView) {
+        var contentView = new ContentView();
+        this.add(contentView);
+        contentView.add(this._args.contentView);
+    }
     this.bg = Ti.UI.createWindow({
         backgroundColor: "black",
         opacity: 0.3
@@ -36,6 +42,13 @@ function Popover(args,o){
         self.hide();
     });
 }
+
+Popover.prototype.add = function(view){
+    view._popover = this;
+    this._content = view;
+};
+
+// popover public api
 Popover.prototype.show = function(){
     var openAnim = Ti.UI.createAnimation({
         opacity: 1,
@@ -48,14 +61,6 @@ Popover.prototype.hide = function(){
     this.bg.close();  
     this.contentWindow.close();  
 };
-Popover.prototype.add = function(view){
-    view._parent = this;
-};
-Popover.prototype.setContentView = function(view){
-    this.contentWindow.removeAllChildren();
-    this.contentView = view;  
-    this.contentWindow.add(this.contentView);
-};
 
 
 /*
@@ -66,13 +71,13 @@ function ContentView(args,o){
 }
 ContentView.prototype.add = function(view){
     if (isWindow(view)) {
-        view.applyProperties(this._parent._args);
-        this._parent.contentWindow = view;
-        this._parent.contentView = view;
+        view.applyProperties(this._popover._args);
+        this._popover.contentWindow = view;
+        this._popover.contentView = view;
     } else {
-        this._parent.contentView = view;
-        this._parent.contentWindow = Ti.UI.createWindow(this._parent._args);
-        this._parent.contentWindow.add(this._parent.contentView);
+        this._popover.contentView = view;
+        this._popover.contentWindow = Ti.UI.createWindow(this._popover._args);
+        this._popover.contentWindow.add(this._popover.contentView);
     }
 };
 
