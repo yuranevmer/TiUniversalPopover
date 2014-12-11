@@ -9,7 +9,7 @@ Copy `UniversalPopover.js` in `app/lib` folder.
 
 ##Usage
 
-In `.XML` files simply add namespace attribute
+In `.XML` files simply add `module` attribute
 ```xml
 <Popover module="UniversalPopover" id="popover">
     <ContentView>
