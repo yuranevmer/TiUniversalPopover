@@ -8,13 +8,11 @@ Useful for launching iPad apps on iPhones.
 Copy `UniversalPopover.js` in `app/lib` folder.
 
 ##Usage
-```js
-Ti.UI.Popover = require("UniversalPopover");
-```
+
 In `.XML` files simply add namespace attribute
 ```xml
-<Popover ns="Ti.UI.Popover" id="popover">
-    <ContentView ns="Ti.UI.Popover">
+<Popover module="UniversalPopover" id="popover">
+    <ContentView>
         <NavigationWindow>
             ...
         </NaigationWindow>
@@ -30,8 +28,8 @@ var contentView = Ti.UI.createView({
     width:"50%",
     height:"50%"
 });
-var popover = Ti.UI.Popover.createPopover({
-    contentView: contentView,   //can set only on creation
+var popover = require("UniversalPopover").createPopover({
+    contentView: contentView,   //must set before show
     width: 200,
     height: 200
 });
